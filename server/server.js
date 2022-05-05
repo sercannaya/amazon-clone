@@ -1,8 +1,23 @@
 const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
 
+dotenv.config();
 const app = express();
+
+mongoose.connect(
+  process.env.DATABASE,
+// { useNewUrlParser: true, useUnifiedTopology: true},
+
+err=> {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log('Np with MongoDB');
+  }
+})
 
 // Middlewares
 app.use(morgan('dev'));
