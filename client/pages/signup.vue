@@ -19,6 +19,7 @@
                     type="text" 
                     id="ap_customer_name" 
                     class="a-input-text form-control auth-autofocus auth-required-field auth-contact-verification-request-info"
+                    v-model="name"
                   />
                 </div>
                 <!-- Email -->
@@ -28,6 +29,7 @@
                     type="email" 
                     id="ap_customer_name" 
                     class="a-input-text form-control auth-autofocus auth-required-field auth-contact-verification-request-info"
+                    v-model="email"
                   />
                 </div>
                 <!-- Password -->
@@ -37,6 +39,7 @@
                     type="password" 
                     id="ap_customer_name" 
                     class="a-input-text form-control auth-autofocus auth-required-field auth-contact-verification-request-info"
+                    v-model="password"
                   />
                   <div class="a-alert-container">
                     <div class="a-alert-content">Password must be at least 6 characters</div>
@@ -47,7 +50,7 @@
                 <div class="a-row a-spacing-extra-large mb-4">
                   <span class="a-button-primary">
                     <span class="a-button-inner">
-                      <span class="a-button-text">Create your Amazon account</span>
+                      <span class="a-button-text" @click="onSignup">Create your Amazon account</span>
                     </span>
                   </span>
                   <div class="a-row a-spacing-top-medium a-size-small">
@@ -73,3 +76,43 @@
     </div>
   </div>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      name: "",
+      email: "",
+      password: "",
+    }
+  },
+  methods: {
+    async onSignup() {
+      try {
+        let data = {
+          name: this.name,
+          email: this.email,
+          password: this.password
+        }
+
+        let response = await this.$axios.$post("/api/auth/signup", data);
+        console.log(response);
+
+        if (response.success) {
+          this.$auth.loginWith("local", {
+            data: {
+              email: this.email,
+              password: this.password
+            }
+          });
+        
+        this.$router.push("/");
+        }
+      } catch (err) {
+        console.log(err)
+      }
+    }
+    
+  },
+}
+</script>
